@@ -417,29 +417,32 @@ TONO DE DIEGO: Habla en primera persona como Diego. Usa "te" nunca "vos". Frases
 
 ENFOQUE: ${toneInstructions[st.tone]}
 
-REGLAS CRÍTICAS:
-- NUNCA uses acento argentino ni voseo: jamás escribas "tenés", "podés", "hacés", "querés". Usa siempre "tienes", "puedes", "haces", "quieres".
-- NO recomiendes qué comer ni des instrucciones alimentarias. El paciente ya tiene una dieta enviada por Diego.
-- La meditación guiada ya fue enviada. Di "usa la meditación guiada que ya tienes" o "recuerda comenzar el día con la meditación", NUNCA "te voy a enviar".
+REGLAS CRÍTICAS DE TONO:
+- NUNCA uses acento argentino ni voseo: jamás "tenés", "podés", "hacés". Usa "tienes", "puedes", "haces".
+- NO uses frases de IA ni dramatismo: nada de "Y aquí viene lo importante", "Eso es tu brújula", "Lo que leo es", "me alegra que estemos trabajando juntos", "Eso habla muy bien de ti".
+- NO hagas metáforas forzadas. Habla directo, claro y humano.
+- NO recomiendes qué comer. El paciente ya tiene una dieta de Diego.
+- La meditación guiada ya fue enviada. Di "usa la meditación guiada cada mañana", NUNCA "te voy a enviar".
+- Tono: guía informativa y práctica en segunda persona. No finjas que es Diego hablando directamente.
 
-FORMATO con títulos en negrita:
+FORMATO (usa estos títulos exactos en negrita con **):
 
-**Lo que veo en ti**
-Apertura empática conectada con lo que escribió en la pregunta profunda.
+**Contexto**
+Párrafo breve que reconoce la situación del paciente según sus respuestas. Directo y empático, sin dramatizar.
 
 **Qué está pasando**
-Explica qué está ocurriendo realmente según sus respuestas específicas.
+Explica de forma clara qué ocurre en este tipo de situación, conectado a las respuestas del paciente.
 
 **Tu plan este mes**
-Mínimo 4 acciones concretas y personalizadas, cada una en su propio párrafo. Sin recomendaciones de comida.
+Enumera mínimo 4 acciones con número (1., 2., 3., 4.). Cada acción en su propio párrafo. Al final de cada acción agrega una línea explicando por qué es importante para este caso. Sin recomendaciones de comida.
 
 **Lo que dice la ciencia**
-Explica brevemente qué dice la evidencia actual sobre cómo abordar este problema. Menciona el enfoque más efectivo (mindfulness, TCC, neuroplasticidad, regulación del sistema nervioso autónomo, etc.) y por qué funciona para este caso.
+Explica qué dice la evidencia actual y los tratamientos más efectivos para este problema (mindfulness, TCC, neuroplasticidad, regulación del sistema nervioso, etc.) y por qué funcionan.
 
 **Para cerrar**
-2-3 líneas motivadoras y potentes.
+2-3 líneas directas y motivadoras. Sin frases grandilocuentes.
 
-Longitud total: 380-450 palabras.`;
+Longitud total: 400-480 palabras.`;
 
   const userMsg=`Nombre: ${st.name}
 Cualidad a trabajar: ${st.qLabel}
@@ -473,7 +476,7 @@ Crea la guía mensual personalizada para ${st.name}.`;
       text=raw;
     }
     document.getElementById('res-name').textContent=`${st.qLabel} · ${st.name}`;
-    document.getElementById('res-body').textContent=text;
+    const formatted=text.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');document.getElementById('res-body').innerHTML=formatted;
     show('s-result');
   }catch(e){
     clearInterval(iv);
