@@ -443,16 +443,26 @@ Crea la guía mensual personalizada para ${st.name}.`;
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({system,userMsg})
     });
-    const data=await res.json();
+    const raw=await res.text();
     clearInterval(iv);
-    const text=data.content?.find(b=>b.type==='text')?.text||'No se pudo generar. Intenta de nuevo.';
+    let text='';
+    try{
+      const data=JSON.parse(raw);
+      if(data.content&&data.content.length>0){
+        text=data.content[0].text||JSON.stringify(data);
+      } else {
+        text=JSON.stringify(data);
+      }
+    }catch(pe){
+      text=raw;
+    }
     document.getElementById('res-name').textContent=`${st.qLabel} · ${st.name}`;
     document.getElementById('res-body').textContent=text;
     show('s-result');
   }catch(e){
     clearInterval(iv);
-    document.getElementById('res-name').textContent='Error de conexión';
-    document.getElementById('res-body').textContent='Error: '+e.message
+    document.getElementById('res-name').textContent='Error';
+    document.getElementById('res-body').textContent=e.message;
     show('s-result');
   }
 }
