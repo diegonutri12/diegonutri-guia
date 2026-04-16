@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guía Personalizada · Diego.Nutri</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f7f5f2;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem}
+.app{width:100%;max-width:560px;background:#fff;border-radius:20px;padding:2rem 1.75rem;box-shadow:0 4px 40px rgba(0,0,0,.07)}
+.screen{display:none}.screen.active{display:block}
+.logo{font-family:'DM Serif Display',serif;font-size:22px;color:#1a1a1a;margin-bottom:2rem;letter-spacing:-.3px}
+.logo span{color:#1D9E75}
+.title{font-family:'DM Serif Display',serif;font-size:26px;color:#1a1a1a;line-height:1.25;margin-bottom:.5rem}
+.sub{font-size:15px;color:#666;line-height:1.65;margin-bottom:1.5rem}
+label{font-size:13px;color:#888;display:block;margin-bottom:.4rem}
+input[type=text]{width:100%;padding:11px 14px;border:1.5px solid #e8e4df;border-radius:10px;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;color:#1a1a1a;background:#fff;transition:border-color .2s}
+input[type=text]:focus{border-color:#1D9E75}
+textarea{width:100%;padding:12px 14px;border:1.5px solid #e8e4df;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;color:#1a1a1a;background:#fff;resize:none;line-height:1.6;transition:border-color .2s}
+textarea:focus{border-color:#1D9E75}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:1rem 0}
+.qbtn{padding:11px 12px;border:1.5px solid #e8e4df;border-radius:10px;background:#fff;font-size:13px;font-family:'DM Sans',sans-serif;color:#666;cursor:pointer;text-align:left;line-height:1.35;transition:all .2s}
+.qbtn:hover{border-color:#1D9E75;color:#1a1a1a}
+.qbtn.sel{border-color:#1D9E75;background:#E1F5EE;color:#085041;font-weight:500}
+.otro-wrap{display:none;margin-bottom:1rem}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;background:#1a1a1a;color:#fff;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:.75rem;transition:background .2s}
+.btn:hover{background:#333}
+.btn:disabled{background:#ccc;cursor:not-allowed}
+.btn-ghost{background:transparent;color:#1a1a1a;border:1.5px solid #e8e4df}
+.btn-ghost:hover{background:#f7f5f2}
+.progress-wrap{margin-bottom:1.5rem}
+.progress-top{display:flex;justify-content:space-between;font-size:12px;color:#999;margin-bottom:.4rem}
+.bar{height:3px;background:#e8e4df;border-radius:2px}
+.fill{height:3px;background:#1D9E75;border-radius:2px;transition:width .35s ease}
+.qtxt{font-family:'DM Serif Display',serif;font-size:19px;color:#1a1a1a;line-height:1.4;margin-bottom:1.25rem}
+.choices{display:flex;flex-direction:column;gap:8px;margin-bottom:.75rem}
+.choice{padding:12px 15px;border:1.5px solid #e8e4df;border-radius:10px;background:#fff;font-size:14px;font-family:'DM Sans',sans-serif;color:#666;cursor:pointer;text-align:left;line-height:1.35;transition:all .15s}
+.choice:hover{border-color:#1D9E75;color:#1a1a1a}
+.choice.sel{border-color:#1D9E75;background:#E1F5EE;color:#085041;font-weight:500}
+.otro-c-wrap{display:none;margin-top:6px}
+.tone-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.tone-btn{padding:14px 16px;border:1.5px solid #e8e4df;border-radius:10px;background:#fff;font-size:14px;font-family:'DM Sans',sans-serif;color:#666;cursor:pointer;text-align:left;line-height:1.4;transition:all .2s}
+.tone-btn:hover{border-color:#1D9E75;color:#1a1a1a}
+.tone-btn.sel{border-color:#1D9E75;background:#E1F5EE;color:#085041;font-weight:500}
+.tone-btn strong{display:block;font-weight:500;color:#1a1a1a;margin-bottom:2px;font-size:14px}
+.tone-btn.sel strong{color:#085041}
+.tone-btn span{font-size:12px;opacity:.7}
+.back{font-size:13px;color:#999;cursor:pointer;text-decoration:none;display:inline-block;margin-bottom:1.25rem}
+.back:hover{color:#1a1a1a}
+.loading{text-align:center;padding:4rem 1rem}
+.spin{width:40px;height:40px;border:2.5px solid #e8e4df;border-top:2.5px solid #1D9E75;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-size:15px;color:#888}
+.res-card{background:#f7f5f2;border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+.res-tag{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:.3rem}
+.res-name{font-family:'DM Serif Display',serif;font-size:20px;color:#1a1a1a;margin-bottom:1rem}
+.divider{height:1px;background:#e8e4df;margin:.75rem 0}
+.res-body{font-size:14px;color:#444;line-height:1.85;white-space:pre-wrap}
+.footer{font-size:12px;color:#bbb;text-align:center;margin-top:1rem}
+@media(max-width:480px){.app{padding:1.5rem 1.25rem}.qgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="logo">Diego<span>.Nutri</span></div>
+
+  <!-- INTRO -->
+  <div id="s-intro" class="screen active">
+    <p class="title">Tu guía personalizada del mes</p>
+    <p class="sub">Responde algunas preguntas y recibirás una guía creada especialmente para ti.</p>
+    <label>¿Cuál es tu nombre?</label>
+    <input type="text" id="inp-name" placeholder="Escribe tu nombre..." maxlength="40"/>
+    <div style="height:1rem"></div>
+    <label style="margin-bottom:.6rem">¿Qué cualidad quieres trabajar este mes?</label>
+    <div class="qgrid" id="qgrid"></div>
+    <div class="otro-wrap" id="otro-wrap">
+      <label>Describe qué quieres mejorar</label>
+      <input type="text" id="otro-input" placeholder="Ej: procrastinación, falta de propósito..." maxlength="80"/>
+    </div>
+    <button class="btn" id="btn-start" disabled onclick="goTone()">Continuar →</button>
+  </div>
+
+  <!-- TONO -->
+  <div id="s-tone" class="screen">
+    <a class="back" onclick="show('s-intro')">← Volver</a>
+    <p class="title" style="margin-bottom:.4rem">¿Cómo prefieres recibir tu guía?</p>
+    <p class="sub">Elige el enfoque que más resuena contigo.</p>
+    <div class="tone-grid">
+      <button class="tone-btn" data-tone="espiritual" onclick="selectTone(this)">
+        <strong>Espiritual y profundo</strong>
+        <span>Reflexiones, conciencia, propósito y conexión interna</span>
+      </button>
+      <button class="tone-btn" data-tone="cientifico" onclick="selectTone(this)">
+        <strong>Científico y neurológico</strong>
+        <span>Explicaciones basadas en neurociencia y evidencia</span>
+      </button>
+      <button class="tone-btn" data-tone="mixto" onclick="selectTone(this)">
+        <strong>Una mezcla de ambos</strong>
+        <span>Ciencia con sentido profundo, lo mejor de los dos mundos</span>
+      </button>
+    </div>
+    <button class="btn" id="btn-tone" disabled onclick="startQuestions()">Comenzar →</button>
+  </div>
+
+  <!-- PREGUNTAS -->
+  <div id="s-q" class="screen">
+    <a class="back" onclick="show('s-tone')">← Volver</a>
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span id="q-label">Pregunta 1 de 8</span>
+        <span id="q-pname"></span>
+      </div>
+      <div class="bar"><div class="fill" id="q-fill" style="width:12.5%"></div></div>
+    </div>
+    <p class="qtxt" id="q-txt"></p>
+    <div class="choices" id="q-choices"></div>
+    <div class="otro-c-wrap" id="q-otro-wrap">
+      <input type="text" id="q-otro" placeholder="Escribe aquí..." maxlength="120"/>
+    </div>
+    <div id="q-text-wrap" style="display:none">
+      <textarea id="q-text" rows="4" placeholder="Escribe aquí con libertad..."></textarea>
+    </div>
+    <button class="btn" id="btn-next" disabled onclick="nextQ()">Siguiente →</button>
+  </div>
+
+  <!-- PREGUNTA PROFUNDA -->
+  <div id="s-deep" class="screen">
+    <a class="back" onclick="goBackFromDeep()">← Volver</a>
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span>Pregunta final · La más importante</span>
+        <span id="deep-name"></span>
+      </div>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+    </div>
+    <p class="qtxt">Esta es la pregunta más importante. Cuéntame con total honestidad: ¿qué crees que está en la raíz de esta dificultad? Puede ser algo del pasado, un miedo que se repite, una creencia sobre ti mismo, una experiencia que te marcó, o simplemente cómo te sientes contigo mismo hoy. No hay respuesta incorrecta.</p>
+    <textarea id="deep-txt" rows="6" placeholder="Escribe con libertad. Esta información es confidencial y solo la usaré para crear una guía que realmente te ayude..." oninput="document.getElementById('btn-deep').disabled=this.value.trim().length<10"></textarea>
+    <button class="btn" id="btn-deep" disabled onclick="generateGuide()">Generar mi guía →</button>
+  </div>
+
+  <!-- LOADING -->
+  <div id="s-loading" class="screen">
+    <div class="loading">
+      <div class="spin"></div>
+      <p id="load-msg">Analizando tus respuestas...</p>
+    </div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div id="s-result" class="screen">
+    <a class="back" onclick="restart()">← Nueva consulta</a>
+    <div class="res-card">
+      <p class="res-tag">Tu guía personalizada del mes</p>
+      <p class="res-name" id="res-name"></p>
+      <div class="divider"></div>
+      <p class="res-body" id="res-body"></p>
+    </div>
+    <p class="footer">Generado por Diego.Nutri · Nutricionista Online</p>
+  </div>
+</div>
+
+<script>
+const Q={
+  'Ansiedad':{label:'Ansiedad / Sobrepensar',qs:[
+    {t:'¿Con qué frecuencia sientes ansiedad durante el día?',opts:['Casi todo el día','Varias veces al día','Algunas veces a la semana','De vez en cuando']},
+    {t:'¿En qué momentos suele aparecer más?',opts:['En la mañana al despertar','Durante el trabajo o estudio','En la noche antes de dormir','Sin patrón claro']},
+    {t:'¿Qué situaciones suelen detonarla?',opts:['Pendientes y responsabilidades','Conflictos con personas','Incertidumbre del futuro','El silencio o estar solo','Otro']},
+    {t:'¿Cómo reaccionas cuando aparece?',opts:['Me paralizo','Evito la situación','Me distraigo con el celular','Intento respirar y calmarme','Otro']},
+    {t:'¿Tienes práctica actual de relajación?',opts:['Medito regularmente','Hago ejercicio como válvula','Ninguna todavía','Lo intento sin constancia']},
+    {t:'¿Cuántas horas duermes en promedio?',opts:['Menos de 5 hrs','5-6 hrs','7-8 hrs','Más de 8 hrs pero igual amanezco cansado']},
+    {t:'¿La ansiedad afecta tu alimentación?',opts:['Sí, como de más','Sí, como menos o salto comidas','No lo relaciono','A veces sí','Otro']},
+    {t:'¿Qué esperas lograr al trabajar tu ansiedad este mes?',type:'text'}
+  ]},
+  'Disciplina':{label:'Disciplina / Constancia',qs:[
+    {t:'¿Cuál es tu mayor obstáculo para ser disciplinado?',opts:['La pereza o flojera','Falta de motivación','Me distraigo fácilmente','Empiezo bien pero no termino','Otro']},
+    {t:'¿A qué hora del día eres más productivo?',opts:['En la mañana','En la tarde','En la noche','No tengo un horario claro']},
+    {t:'¿Sigues alguna rutina estructurada?',opts:['Sí, bastante ordenada','Algo de estructura','Muy poca','Ninguna, soy desorganizado']},
+    {t:'¿Qué hábito te ha costado más mantener?',type:'text'},
+    {t:'¿Cuándo fallas, cómo reaccionas?',opts:['Me frustro y abandono','Me culpo mucho','Lo tomo con calma y reintento','Me motivo más','Otro']},
+    {t:'¿Consumes contenido que te motive o inspire?',opts:['Sí, regularmente','A veces','Rara vez','No, nunca']},
+    {t:'¿En qué área quieres ser más disciplinado?',type:'text'},
+    {t:'¿Qué tan importante es lograr tus metas este mes?',opts:['Lo más importante para mí','Bastante importante','Importante pero me cuesta','Todavía no lo tengo claro']}
+  ]},
+  'Autoestima':{label:'Autoestima / Inseguridad',qs:[
+    {t:'¿En qué situaciones te sientes más inseguro?',opts:['Con personas nuevas','En el trabajo o estudios','Con mi apariencia física','En relaciones personales','Otro']},
+    {t:'¿Cómo te hablas cuando cometes un error?',opts:['Muy duro, me critico mucho','Algo exigente','Con comprensión','No lo había pensado']},
+    {t:'¿Comparas tu vida o cuerpo con el de otros?',opts:['Sí, todo el tiempo','A veces sí','Rara vez','No me pasa']},
+    {t:'¿Qué aspectos de ti mismo te cuesta más aceptar?',type:'text'},
+    {t:'¿Buscas validación externa frecuentemente?',opts:['Sí, la necesito mucho','A veces me importa','Poco, soy bastante independiente','No me afecta']},
+    {t:'¿Haces alguna actividad que te haga sentir bien contigo mismo?',opts:['Sí, tengo hobbies','El entrenamiento me ayuda','No tengo tiempo para eso','Estoy buscando algo','Otro']},
+    {t:'¿Cuándo fue la última vez que te sentiste orgulloso de ti?',type:'text'},
+    {t:'¿Qué cambio concreto esperas en tu autoestima este mes?',type:'text'}
+  ]},
+  'Motivacion':{label:'Motivación / Desánimo',qs:[
+    {t:'¿Cuándo fue la última vez que te sentiste realmente motivado?',type:'text'},
+    {t:'¿Qué suele apagar tu motivación?',opts:['No ver resultados rápidos','El cansancio acumulado','La comparación con otros','Sentir que no soy capaz','Otro']},
+    {t:'¿Tienes claro por qué quieres mejorar tu salud?',opts:['Sí, muy claro','Más o menos','Lo tengo pero se me olvida','No del todo']},
+    {t:'¿Cómo son tus mañanas actualmente?',opts:['Me levanto con energía','Regular, necesito tiempo','Con mucha pereza','Depende mucho del día']},
+    {t:'¿El desánimo afecta tu alimentación o entrenamiento?',opts:['Sí, como mal cuando estoy desanimado','Sí, no entreno','Me afecta en ambos','No los relaciono']},
+    {t:'¿Qué actividad te recarga cuando estás desanimado?',type:'text'},
+    {t:'¿Tienes metas concretas definidas?',opts:['Sí, las tengo claras','Las tengo en mente pero no escritas','Más o menos definidas','No, necesito definirlas']},
+    {t:'¿Qué necesitas que cambie para sentirte más motivado?',type:'text'}
+  ]},
+  'Estres':{label:'Estrés / Agotamiento',qs:[
+    {t:'¿Cuál es la principal fuente de estrés ahora?',opts:['Trabajo o estudios','Relaciones personales','Situación económica','Siento que no me alcanza el tiempo','Otro']},
+    {t:'¿Cómo se manifiesta el estrés en tu cuerpo?',opts:['Tensión muscular o dolores de cabeza','Problemas para dormir','Irritabilidad','Como más o menos de lo normal','Otro']},
+    {t:'¿Cuántas horas libres tienes al día para ti?',opts:['Casi ninguna','1 hora aprox','2-3 horas','Suficiente pero no las aprovecho']},
+    {t:'¿El estrés afecta tu alimentación?',opts:['Sí, como más','Sí, como menos','No noto relación','Depende del día']},
+    {t:'¿Tienes momentos de desconexión total?',opts:['Sí, me desconecto bien','Poco, siempre pienso en algo','Casi nunca','El celular me lo impide']},
+    {t:'¿Haces algo para reducir el estrés conscientemente?',opts:['Medito o respiro conscientemente','Hago ejercicio','Salgo a caminar o la naturaleza','Ninguna todavía','Otro']},
+    {t:'¿Qué es lo que más te agota mentalmente?',type:'text'},
+    {t:'¿Qué esperas lograr al manejar mejor tu estrés?',type:'text'}
+  ]},
+  'Energia':{label:'Energía / Vitalidad',qs:[
+    {t:'¿Cómo describirías tu nivel de energía general?',opts:['Muy bajo, cansado siempre','Bajo, me cuesta el día','Regular, varía mucho','Bueno, pero podría mejorar']},
+    {t:'¿A qué hora del día tienes más energía?',opts:['En la mañana','En la tarde','En la noche','No tengo momentos claros']},
+    {t:'¿Cuántas horas duermes en promedio?',opts:['Menos de 5 hrs','5-6 hrs','7-8 hrs','Más de 8 pero igual amanezco cansado']},
+    {t:'¿Usas el celular antes de dormir?',opts:['Sí, hasta que me duermo','Intento no hacerlo','Solo un rato','No, lo evito']},
+    {t:'¿Cuánto café u estimulantes consumes?',opts:['Varios al día','Uno en la mañana','Solo a veces','Ninguno']},
+    {t:'¿Qué crees que más drena tu energía?',type:'text'},
+    {t:'¿El bajo nivel de energía afecta tu entrenamiento?',opts:['Sí, mucho','A veces','Poco','No noto relación']},
+    {t:'¿Qué cambio esperas en tu energía este mes?',type:'text'}
+  ]},
+  'Alimentacion':{label:'Ansiedad alimentaria / Control',qs:[
+    {t:'¿Cuándo pierdes más el control con la comida?',opts:['En la noche','Después del trabajo','Cuando estoy estresado o ansioso','A cualquier hora','Otro']},
+    {t:'¿Qué tipo de alimentos son los que más se te van?',opts:['Dulces y azúcares','Frituras y snacks salados','Carbohidratos (pan, pasta)','Cualquier cosa disponible','Otro']},
+    {t:'¿El hambre que sientes es real o emocional?',opts:['Más emocional que real','Mitad y mitad','No sé distinguirla','Real, pero como de más igual']},
+    {t:'¿Comes rápido o despacio?',opts:['Muy rápido, casi sin masticar','Bastante rápido','Normal','Lento y consciente']},
+    {t:'¿Tienes horarios fijos de comida?',opts:['Sí, bastante fijos','Más o menos','No, como cuando puedo','Intento pero fallo mucho']},
+    {t:'¿Qué situaciones o emociones disparan las ganas de comer?',type:'text'},
+    {t:'¿Sientes culpa después de comer algo fuera del plan?',opts:['Sí, mucha culpa','A veces','Poco','No, lo tomo bien']},
+    {t:'¿Qué resultado esperas al mejorar tu relación con la comida?',type:'text'}
+  ]},
+  'Presente':{label:'Estar presente / Mindfulness',qs:[
+    {t:'¿Con qué frecuencia estás pensando en el pasado o futuro?',opts:['Casi siempre','Frecuentemente','A veces','Rara vez']},
+    {t:'¿Qué te hace perder más la conexión con el presente?',opts:['El celular y redes sociales','Preocupaciones por el futuro','Pensamientos del pasado','El ruido mental constante','Otro']},
+    {t:'¿Disfrutas los momentos simples del día a día?',opts:['Poco, casi no me doy cuenta','A veces sí','Con frecuencia','Sí, suelo estar presente']},
+    {t:'¿Cuánto tiempo pasas en el celular al día?',opts:['Más de 6 horas','4-6 horas','2-4 horas','Menos de 2 horas']},
+    {t:'¿Tienes momentos de silencio o quietud durante el día?',opts:['Casi ninguno','Muy pocos','Algunos','Sí, los busco']},
+    {t:'¿Has practicado meditación o respiración consciente?',opts:['Sí, regularmente','Lo he intentado','Una o dos veces','Nunca']},
+    {t:'¿Qué actividad te ayuda a estar más presente?',type:'text'},
+    {t:'¿Qué esperas sentir al practicar más el estar presente?',type:'text'}
+  ]},
+  'Otro':{label:'Otra cualidad',qs:[
+    {t:'¿Con qué frecuencia este tema afecta tu día a día?',opts:['Siempre, es constante','Muy frecuentemente','Algunas veces','De vez en cuando']},
+    {t:'¿En qué parte de tu vida te impacta más?',opts:['En mi trabajo o rendimiento','En mis relaciones','En mi bienestar emocional','En mi cuerpo o salud física','Otro']},
+    {t:'¿Cuánto tiempo llevas lidiando con esto?',opts:['Hace poco tiempo','Algunos meses','Más de un año','Toda mi vida o desde pequeño']},
+    {t:'¿Has intentado mejorar esto antes?',opts:['Sí, y algo me ha funcionado','Sí, pero sin resultados','No, es la primera vez','Estoy empezando a tomar conciencia']},
+    {t:'¿Qué situaciones o personas lo agravan?',type:'text'},
+    {t:'¿Cómo te afecta emocionalmente cargar con esto?',opts:['Me genera mucho estrés','Me baja la autoestima','Me hace sentir solo','Me frustra y desanima','Otro']},
+    {t:'¿Tienes algún recurso o apoyo actual para trabajarlo?',opts:['Sí, tengo apoyo profesional','Cuento con personas cercanas','Lo trabajo solo','No tengo recursos todavía']},
+    {t:'¿Qué resultado concreto esperas al trabajar esto este mes?',type:'text'}
+  ]}
+};
+
+let st={name:'',quality:'',qLabel:'',tone:'',answers:[],currentQ:0};
+
+function initGrid(){
+  const g=document.getElementById('qgrid');
+  Object.entries(Q).forEach(([k,v])=>{
+    const b=document.createElement('button');
+    b.className='qbtn';b.textContent=v.label;
+    b.onclick=()=>{
+      document.querySelectorAll('.qbtn').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');st.quality=k;st.qLabel=v.label;
+      document.getElementById('otro-wrap').style.display=k==='Otro'?'block':'none';
+      checkReady();
+    };
+    g.appendChild(b);
+  });
+}
+
+function checkReady(){
+  const n=document.getElementById('inp-name').value.trim();
+  const q=st.quality;
+  const otr=q==='Otro'?document.getElementById('otro-input').value.trim():'x';
+  document.getElementById('btn-start').disabled=!(n&&q&&otr);
+}
+
+document.getElementById('inp-name').addEventListener('input',checkReady);
+document.getElementById('otro-input').addEventListener('input',checkReady);
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goTone(){
+  st.name=document.getElementById('inp-name').value.trim();
+  if(st.quality==='Otro'){
+    st.qLabel=document.getElementById('otro-input').value.trim();
+  }
+  show('s-tone');
+}
+
+function selectTone(btn){
+  document.querySelectorAll('.tone-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  st.tone=btn.dataset.tone;
+  document.getElementById('btn-tone').disabled=false;
+}
+
+function startQuestions(){
+  st.answers=[];st.currentQ=0;
+  show('s-q');renderQ();
+}
+
+function renderQ(){
+  const qs=Q[st.quality].qs;
+  const q=qs[st.currentQ];
+  const total=qs.length;
+  const idx=st.currentQ;
+  document.getElementById('q-label').textContent=`Pregunta ${idx+1} de ${total}`;
+  document.getElementById('q-pname').textContent=st.name;
+  document.getElementById('q-fill').style.width=`${((idx+1)/total)*100}%`;
+  document.getElementById('q-txt').textContent=q.t;
+  const choicesEl=document.getElementById('q-choices');
+  const otroWrap=document.getElementById('q-otro-wrap');
+  const textWrap=document.getElementById('q-text-wrap');
+  choicesEl.innerHTML='';
+  otroWrap.style.display='none';
+  textWrap.style.display='none';
+  document.getElementById('q-otro').value='';
+  document.getElementById('btn-next').disabled=true;
+  document.getElementById('btn-next').textContent=idx===total-1?'Pregunta final →':'Siguiente →';
+
+  if(q.type==='text'){
+    textWrap.style.display='block';
+    const ta=document.getElementById('q-text');
+    ta.value='';
+    ta.oninput=()=>{document.getElementById('btn-next').disabled=ta.value.trim().length<3};
+  } else {
+    (q.opts||[]).forEach(opt=>{
+      const b=document.createElement('button');
+      b.className='choice';b.textContent=opt;
+      b.onclick=()=>{
+        document.querySelectorAll('.choice').forEach(x=>x.classList.remove('sel'));
+        b.classList.add('sel');
+        if(opt==='Otro'){
+          otroWrap.style.display='block';
+          document.getElementById('q-otro').focus();
+          document.getElementById('btn-next').disabled=true;
+          document.getElementById('q-otro').oninput=()=>{
+            document.getElementById('btn-next').disabled=document.getElementById('q-otro').value.trim().length<2;
+          };
+        } else {
+          otroWrap.style.display='none';
+          document.getElementById('btn-next').disabled=false;
+        }
+      };
+      choicesEl.appendChild(b);
+    });
+  }
+}
+
+function nextQ(){
+  const q=Q[st.quality].qs[st.currentQ];
+  let answer='';
+  if(q.type==='text'){
+    answer=document.getElementById('q-text').value.trim();
+  } else {
+    const sel=document.querySelector('.choice.sel');
+    if(sel&&sel.textContent==='Otro'){
+      answer='Otro: '+document.getElementById('q-otro').value.trim();
+    } else {
+      answer=sel?sel.textContent:'';
+    }
+  }
+  st.answers.push({q:q.t,a:answer});
+  st.currentQ++;
+  if(st.currentQ>=Q[st.quality].qs.length){
+    document.getElementById('deep-name').textContent=st.name;
+    show('s-deep');
+  } else {
+    renderQ();
+  }
+}
+
+function goBackFromDeep(){
+  st.currentQ=Q[st.quality].qs.length-1;
+  show('s-q');renderQ();
+}
+
+function restart(){
+  st={name:'',quality:'',qLabel:'',tone:'',answers:[],currentQ:0};
+  document.getElementById('inp-name').value='';
+  document.getElementById('otro-input').value='';
+  document.getElementById('otro-wrap').style.display='none';
+  document.querySelectorAll('.qbtn').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('.tone-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('btn-tone').disabled=true;
+  show('s-intro');
+}
+
+async function generateGuide(){
+  const deepAns=document.getElementById('deep-txt').value.trim();
+  show('s-loading');
+  const msgs=['Analizando tus respuestas...','Creando tu guía personalizada...','Aplicando el enfoque de Diego.Nutri...','Casi lista tu guía...'];
+  let mi=0;
+  const iv=setInterval(()=>{
+    document.getElementById('load-msg').textContent=msgs[mi%msgs.length];mi++;
+  },2200);
+
+  const toneInstructions={
+    espiritual:'Usa un enfoque espiritual y profundo. Habla de conciencia, propósito, energía interior, conexión con uno mismo. Usa metáforas filosóficas y menciona la meditación como práctica central.',
+    cientifico:'Usa un enfoque científico y neurológico. Explica lo que pasa en el cerebro (cortisol, dopamina, neuroplasticidad, sistema nervioso). Fundamenta cada recomendación en evidencia.',
+    mixto:'Combina ciencia y espiritualidad. Explica brevemente la base neurológica de lo que le pasa, luego conéctala con el sentido más profundo y humano.'
+  };
+
+  const qa=st.answers.map((a,i)=>`${i+1}. ${a.q}\nRespuesta: ${a.a}`).join('\n\n');
+
+  const system=`Eres el asistente de Diego, nutricionista titulado y coach de hábitos y conciencia online (Diego.Nutri). Creas guías mensuales personalizadas.
+
+TONO DE DIEGO: Habla en primera persona como Diego. Usa "te" nunca "vos". Frases naturales: "te cuento", "me alegro que estemos trabajando juntos", "de seguro", "lo que sí es clave". Sé específico a lo que el paciente respondió. El tono es de nutricionista que trabaja el lado mental, emocional y espiritual.
+
+ENFOQUE: ${toneInstructions[st.tone]}
+
+ESTRUCTURA (sin títulos, solo párrafos fluidos):
+1. Apertura empática: conecta directamente con lo que escribió en la pregunta profunda
+2. Entendimiento: explica qué está pasando realmente según sus respuestas
+3. Acciones concretas: mínimo 4 prácticas específicas y personalizadas a SUS respuestas
+4. Cierre motivador: breve, potente, que deje energía real
+
+Longitud: 320-400 palabras. Sin bullets ni listas. Solo párrafos fluidos.`;
+
+  const userMsg=`Nombre: ${st.name}
+Cualidad a trabajar: ${st.qLabel}
+Tono preferido: ${st.tone}
+
+Respuestas:
+${qa}
+
+Pregunta profunda:
+${deepAns}
+
+Crea la guía mensual personalizada para ${st.name}.`;
+
+  try{
+    const res=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({system,userMsg})
+    });
+    const data=await res.json();
+    clearInterval(iv);
+    const text=data.content?.find(b=>b.type==='text')?.text||'No se pudo generar. Intenta de nuevo.';
+    document.getElementById('res-name').textContent=`${st.qLabel} · ${st.name}`;
+    document.getElementById('res-body').textContent=text;
+    show('s-result');
+  }catch(e){
+    clearInterval(iv);
+    document.getElementById('res-name').textContent='Error de conexión';
+    document.getElementById('res-body').textContent='Hubo un problema. Por favor intenta de nuevo.';
+    show('s-result');
+  }
+}
+
+initGrid();
+</script>
+</body>
+</html>
