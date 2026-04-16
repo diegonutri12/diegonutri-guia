@@ -452,7 +452,7 @@ Crea la guía mensual personalizada para ${st.name}.`;
   }catch(e){
     clearInterval(iv);
     document.getElementById('res-name').textContent='Error de conexión';
-    document.getElementById('res-body').textContent='Hubo un problema. Por favor intenta de nuevo.';
+    document.getElementById('res-body').textContent='Error: '+e.message
     show('s-result');
   }
 }
